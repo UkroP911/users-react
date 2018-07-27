@@ -4,7 +4,6 @@ export default ({
                     colPages,
                     currentPage,
                     handlePagination,
-                    updateApp
                 }) =>{
 
     let pageLink = [];
@@ -15,7 +14,7 @@ export default ({
                 key={i}
             ><a
                 className="page-link"
-                href=""
+                href="#"
                 onClick={() => {
                     return handlePagination(i - currentPage )
                 }}

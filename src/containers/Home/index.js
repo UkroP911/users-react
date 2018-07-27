@@ -11,7 +11,7 @@ class Home extends Component{
         super(props);
     }
     componentWillMount() {
-        this.props.fetchData('https://randomuser.me/api/?results=1');
+        // this.props.fetchData('https://randomuser.me/api/?results=1');
     }
 
     render(){
@@ -21,9 +21,11 @@ class Home extends Component{
                     <div className="row">
                         <div className="col">
                             <aside className="sidebar">
+                                {/*{console.log(this.props)}*/}
                                 {
                                     this.props.user &&
                                         this.props.user.map((item, id) => {
+                                            console.log(item)
                                             return <UserInfo
                                                 key={id}
                                                 {...item}
@@ -46,7 +48,7 @@ class Home extends Component{
 
 export default connect(
     state => ({
-        user: state.users.results,
+        user: state.users,
         hasErrored: state.usersHasErrored,
         isLoading: state.usersIsLoading
     }),

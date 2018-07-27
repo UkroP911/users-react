@@ -17,7 +17,7 @@ export function usersIsLoading(bool) {
 export function usersFetchDataSuccess(users) {
     return {
         type: C.USERS_FETCH_DATA_SUCCESS,
-        users
+        users: users
     };
 }
 
@@ -32,14 +32,20 @@ export function usersFetchData(url) {
                 }
 
                 dispatch(usersIsLoading(false));
-                console.log(response)
                 return response;
             })
             .then((response) => response.json())
+            .then(obj => obj.results)
+            .then(data => data.map(
+                (person, id) => ({
+                    name: person.name.first.charAt(0).toUpperCase() + person.name.first.slice(1) + ' ' + person.name.last.charAt(0).toUpperCase() + person.name.last.slice(1),
+                    age: person.dob.age,
+                    phone: person.phone,
+                    avatar: person.picture.thumbnail,
+                    avatarLarge: person.picture.large,
+                    id: id
+                })))
             .then((data) => dispatch(usersFetchDataSuccess(data)))
-            .catch((error) => {
-                console.log("erro",error)
-                dispatch(usersHasErrored(true))
-            });
+            .catch(() => dispatch(usersHasErrored(true)));
     };
 }

@@ -9,7 +9,7 @@ import Pagination from '../../components/Pagination';
 import Search from '../../components/Search';
 
 
-class Fiends extends Component{
+class Friends extends Component{
     constructor(props){
         super(props);
         this.sortType = {
@@ -20,76 +20,21 @@ class Fiends extends Component{
             activeUser: [],
             errorMassage:false,
             errorSearch:false,
-            currentPage:0,
+            currentPage: 0,
             user: [],
             loaded: false,
             loading: false,
         }
     }
 
-    // componentWillMount(){
-    //     this.setState({loading: true});
-    //     fetch('https://randomuser.me/api/?results=100')
-    //         .then(res => res.json())
-    //         .then(obj => obj.results)
-    //         .then(data => data.map(
-    //             (person, id) => (
-    //                 {
-    //                     name: person.name.first.charAt(0).toUpperCase() + person.name.first.slice(1) + ' ' + person.name.last.charAt(0).toUpperCase() + person.name.last.slice(1),
-    //                     age: person.dob.age,
-    //                     phone: person.phone,
-    //                     avatar: person.picture.thumbnail,
-    //                     avatarLarge: person.picture.large,
-    //                     id: id
-    //                 }
-    //             )))
-    //         .then(user => {
-    //             this.initialData = user;
-    //             this.setState({
-    //                 loaded: true,
-    //                 loading: false,
-    //                 user: this.initialData,
-    //                 activeUser: user[0]
-    //             })
-    //         })
-    // }
-
-    destruct = () => {
-        if(this.props.user){
-            let user =  this.props.user.map((person,id) => (
-                {
-                    name: person.name.first.charAt(0).toUpperCase() + person.name.first.slice(1) + ' ' + person.name.last.charAt(0).toUpperCase() + person.name.last.slice(1),
-                    age: person.dob.age,
-                    phone: person.phone,
-                    avatar: person.picture.thumbnail,
-                    avatarLarge: person.picture.large,
-                    id: id
-                }
-            ));
-            this.initialData = user;
-            this.setState({
-                loaded: true,
-                loading: false,
-                user: user,
-                activeUser: user[0]
-            });
-            return user;
-        }
+    componentDidMount() {
+        return this.props.fetchData('https://randomuser.me/api/?results=100');
 
     };
 
-    componentWillMount() {
-        this.props.fetchData('https://randomuser.me/api/?results=10');
-        this.destruct()
-        console.log('componentWillMount PROPS',this.props)
-        console.log('componentWillMount STATE',this.state)
-    };
-
-
-    updateApp(config) {
+    updateApp = (config) => {
         this.setState(config);
         if(config.activeUser){
-            // console.log(config.activeUser)
             if(config.activeUser.index === this.state.activeUser.index){
                 this.setState({
                     errorMassage: true
@@ -124,7 +69,7 @@ class Fiends extends Component{
     };
 
     sort = (type) => {
-        const user = this.state.user;
+        const user = this.props.user;
         const isSorted = this.sortType[type];
         let direction = isSorted ? 1 : -1;
 
@@ -147,14 +92,14 @@ class Fiends extends Component{
     };
 
     splitUsers = () => {
-        // console.log('current', this.state.currentPage * 8);
-        return this.state.user &&
-            this.state.user.slice(this.state.currentPage * 8, this.state.currentPage * 8 + 8);
+        return this.props.user &&
+            this.props.user.slice(this.state.currentPage * 8, this.state.currentPage * 8 + 8);
     };
 
     handlePagination = (number) => {
         const current = this.state.currentPage;
-        if(current + number >= 0 && current + number < Math.ceil(this.state.user.length / 8)){
+
+        if(current + number >= 0 && current + number < Math.ceil(this.props.user.length / 8)){
             this.setState(prev => {
                 return ({
                     currentPage: prev.currentPage + number
@@ -163,13 +108,10 @@ class Fiends extends Component{
         }
     };
 
-
-
-
     render(){
         const {loading} = this.state;
         const splitData = this.splitUsers();
-        const colPages = this.state.user ? Math.ceil(this.state.user.length / 8) : 0;
+        const colPages = this.props.user ? Math.ceil(this.props.user.length / 8) : 0;
 
         return(
             <div className="friends">
@@ -181,19 +123,7 @@ class Fiends extends Component{
                                     <UserInfo
                                         activeUser={this.state.activeUser}
                                     />
-                                    {console.log('component PROPS', this.props)}
-                                    {console.log('component STATE', this.state)}
-                                    {/*{console.log('activeUser', this.state.activeUser)}*/}
-                                    {/*{*/}
-                                        {/*this.props.user &&*/}
-                                        {/*this.props.user.map((item, id) => {*/}
-                                            {/*return <UserInfo*/}
-                                                {/*key={id}*/}
-                                                {/*{...item}*/}
-                                                {/*activeUser={this.state.activeUser}*/}
-                                            {/*/>*/}
-                                        {/*})*/}
-                                    {/*}*/}
+                                    {/*{console.log('state', this.props.user)}*/}
                                 </aside>
                             </div>
                             <div className="col-xl-9">
@@ -219,38 +149,28 @@ class Fiends extends Component{
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {/*{*/}
-                                            {/*loading ?*/}
-                                                {/*<tr>*/}
-                                                    {/*<td>Loading...</td>*/}
-                                                {/*</tr>*/}
-                                                {/*:*/}
-                                                {/*splitData.map((person, index) => {*/}
-                                                    {/*return <UserList*/}
-                                                        {/*key={index}*/}
-                                                        {/*index={index}*/}
-                                                        {/*{...person}*/}
-                                                        {/*updateApp={this.updateApp.bind(this)}*/}
-                                                    {/*/>*/}
-                                                {/*})*/}
-                                        {/*}*/}
-                                        {this.props.user &&
-                                        this.props.user.map((person, index) => {
+                                        {
+                                            loading ?
+                                                <tr>
+                                                    <td>Loading...</td>
+                                                </tr>
+                                                :
+                                                splitData.map((person, index) => {
                                                     return <UserList
                                                         key={index}
                                                         index={index}
                                                         {...person}
-                                                        updateApp={this.updateApp.bind(this)}
+                                                        updateApp={this.updateApp}
                                                     />
                                                 })
                                         }
                                         </tbody>
                                     </table>
-                                    <Pagination
-                                        colPages={colPages}
-                                        currentPage={this.state.currentPage}
-                                        handlePagination={this.handlePagination}
-                                    />
+                                        <Pagination
+                                            colPages={colPages}
+                                            currentPage={this.state.currentPage}
+                                            handlePagination={this.handlePagination}
+                                        />
                                 </main>
                             </div>
                         </div>
@@ -263,20 +183,8 @@ class Fiends extends Component{
 
 export default connect(
     state => {
-        console.log("connect STATE", state.users.results);
         return({
-            user: state.users.results
-            //     .map((person, id) => (
-            //     {
-            //         name: person.name.first.charAt(0).toUpperCase() + person.name.first.slice(1) + ' ' + person.name.last.charAt(0).toUpperCase() + person.name.last.slice(1),
-            //         age: person.dob.age,
-            //         phone: person.phone,
-            //         avatar: person.picture.thumbnail,
-            //         avatarLarge: person.picture.large,
-            //         id: id
-            //     }
-            // ))
-            ,
+            user: state.users,
             hasErrored: state.usersHasErrored,
             isLoading: state.usersIsLoading
         })
@@ -284,4 +192,4 @@ export default connect(
     dispatch => ({
         fetchData: (url) => (dispatch(usersFetchData(url)))
     })
-)(Fiends)
+)(Friends)
