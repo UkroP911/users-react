@@ -1,29 +1,30 @@
 import * as C from '../constants';
 
-export function usersHasErrored(bool) {
+export function usersHasErrored(error) {
     return {
         type: C.USERS_HAS_ERRORED,
-        hasErrored: bool
+        payload:{error}
     };
 }
-
 export function usersIsLoading(bool) {
     return {
         type: C.USERS_IS_LOADING,
-        isLoading: bool
     };
 }
-
 export function usersFetchDataSuccess(users) {
     return {
         type: C.USERS_FETCH_DATA_SUCCESS,
-        users
+        payload: {users}
     };
 }
+
+
+
+
 export function searchData(result) {
     return {
         type: C.SEARCH_DATA,
-        result
+        payload: { result }
     }
 }
 
@@ -44,7 +45,8 @@ export function usersFetchData(url) {
             .then(obj => obj.results)
             .then(data => data.map(
                 (person, id) => ({
-                    name: person.name.first.charAt(0).toUpperCase() + person.name.first.slice(1) + ' ' + person.name.last.charAt(0).toUpperCase() + person.name.last.slice(1),
+                    name: person.name.first.charAt(0).toUpperCase() + person.name.first.slice(1) + ' '
+                          + person.name.last.charAt(0).toUpperCase() + person.name.last.slice(1),
                     age: person.dob.age,
                     phone: person.phone,
                     avatar: person.picture.thumbnail,

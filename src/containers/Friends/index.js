@@ -33,7 +33,8 @@ class Friends extends Component{
     };
 
     updateApp = (config) => {
-        this.setState(config);
+        // this.setState(config);
+        this.props.searchName(config)
         if(config.activeUser){
             if(config.activeUser.index === this.state.activeUser.index){
                 this.setState({
@@ -52,12 +53,17 @@ class Friends extends Component{
 
         const filter = this.props.user.filter( user => user.name.toLowerCase().includes(value) );
         // console.log('filter', filter)
-        this.props.searchName(filter)
 
-        this.updateApp({
-            // user: filter,
-            currentPage: 0
-        });
+
+        if (value === ''){
+            this.props.searchName(this.props.user)
+        }
+
+        this.updateApp(filter)
+        // this.updateApp({
+        //     filter,
+        //     currentPage: 0
+        // });
 
         if(filter.length > 0){
             this.setState({
@@ -112,10 +118,17 @@ class Friends extends Component{
     };
 
     render(){
-        const {loading} = this.state;
         const splitData = this.splitUsers();
         const colPages = this.props.user ? Math.ceil(this.props.user.length / 8) : 0;
 
+        const { error, loading, user } = this.props;
+        if (error) {
+            return <div>Error! {error.message}</div>;
+        }
+
+        if (loading) {
+            return <div>Loading...</div>;
+        }
         return(
             <div className="friends">
                 <div className="friends__content pt-3">
@@ -126,7 +139,7 @@ class Friends extends Component{
                                     <UserInfo
                                         activeUser={this.state.activeUser}
                                     />
-                                    {/*{console.log('state', this.props.user)}*/}
+                                    {console.log('this.props.filter', this.props.filter)}
                                 </aside>
                             </div>
                             <div className="col-xl-9">
@@ -152,20 +165,16 @@ class Friends extends Component{
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {
-                                            this.props.isLoading ?
-                                                <tr>
-                                                    <td>Loading...</td>
-                                                </tr>
-                                                :
-                                                splitData.map((person, index) => {
-                                                    return <UserList
-                                                        key={index}
-                                                        index={index}
-                                                        {...person}
-                                                        updateApp={this.updateApp}
-                                                    />
-                                                })
+                                        {splitData ?
+                                            splitData.map((person, index) => {
+                                                return <UserList
+                                                    key={index}
+                                                    index={index}
+                                                    {...person}
+                                                    updateApp={this.updateApp}
+                                                />
+                                            }) :
+                                            null
                                         }
                                         </tbody>
                                     </table>
@@ -186,10 +195,12 @@ class Friends extends Component{
 
 export default connect(
     state => {
+        // console.log(state.users)
         return({
-            user: state.users,
-            hasErrored: state.usersHasErrored,
-            isLoading: state.usersIsLoading
+            user: state.users.initialData,
+            filter: state.users.data,
+            loading: state.users.loading,
+            error: state.users.error
         })
     },
     dispatch => ({
