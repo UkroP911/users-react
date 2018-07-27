@@ -26,7 +26,7 @@ export default ({
         <nav aria-label="Page navigation example" className="d-flex justify-content-center">
             <ul className="pagination">
                 <li className="page-item">
-                    <a className="page-link" href="" aria-label="Previous"
+                    <a className="page-link" href="#" aria-label="Previous"
                        onClick={() => handlePagination(-1)}
                     >
                         <span aria-hidden="true">&laquo;</span>
@@ -35,7 +35,7 @@ export default ({
                 </li>
                 {pageLink}
                 <li className="page-item">
-                    <a className="page-link" href="" aria-label="Next"
+                    <a className="page-link" href="#" aria-label="Next"
                        onClick={() => handlePagination(1)}
                     >
                         <span aria-hidden="true">&raquo;</span>

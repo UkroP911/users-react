@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 import * as C from '../constants';
-import {usersFetchDataSuccess} from "../actions/getData";
+import {usersFetchDataSuccess} from '../actions/getData'
 
 //
 // const initialState = [{
@@ -158,7 +158,9 @@ import {usersFetchDataSuccess} from "../actions/getData";
 //         initialState.push(data)
 //
 //     });
-
+//
+// const initialState = usersFetchDataSuccess();
+// console.log(initialState);
 
 
 export function usersHasErrored(state = false, action) {
@@ -184,15 +186,24 @@ export function usersIsLoading(state = false, action) {
 export function users(state = [], action) {
     switch (action.type) {
         case C.USERS_FETCH_DATA_SUCCESS:
-            return state = action.users;
-
+            return action.users;
+        case C.SEARCH_DATA:
+            return action.result;
         default:
             return state;
     }
 }
 
+// export function search(state = [], action) {
+//     switch (action.type){
+//         case C.SEARCH_DATA:
+//             return action.result
+//     }
+// }
+
 export default combineReducers({
     users,
     usersHasErrored,
-    usersIsLoading
+    usersIsLoading,
+    // search
 });

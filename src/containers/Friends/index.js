@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { usersFetchData } from '../../actions/getData';
+import { usersFetchData, searchData } from '../../actions/getData';
 
 import UserInfo from '../../components/UserInfo';
 import UserList from '../../components/UserList';
@@ -21,7 +21,7 @@ class Friends extends Component{
             errorMassage:false,
             errorSearch:false,
             currentPage: 0,
-            user: [],
+            user: this.props.user,
             loaded: false,
             loading: false,
         }
@@ -50,10 +50,12 @@ class Friends extends Component{
     search = (e) => {
         const value = e.target.value.toLowerCase();
 
-        const filter = this.initialData.filter( user => user.name.toLowerCase().includes(value) );
+        const filter = this.props.user.filter( user => user.name.toLowerCase().includes(value) );
+        // console.log('filter', filter)
+        this.props.searchName(filter)
 
         this.updateApp({
-            user: filter,
+            // user: filter,
             currentPage: 0
         });
 
@@ -77,17 +79,18 @@ class Friends extends Component{
             return a[type] === b[type] ? 0 : a[type] > b[type] ? direction : direction * -1;
         });
 
-        this.updateApp({
-            user: sorted
-        });
+        this.props.searchName(sorted)
+
         this.sortType[type] = !isSorted;
     };
 
     reset = () => {
-        this.updateApp({
-            user: this.initialData,
-            activeUser: this.initialData[0]
-        })
+        this.props.searchName(this.props.user)
+
+        // this.updateApp({
+        //     user: this.initialData,
+        //     activeUser: this.initialData[0]
+        // })
 
     };
 
@@ -150,7 +153,7 @@ class Friends extends Component{
                                         </thead>
                                         <tbody>
                                         {
-                                            loading ?
+                                            this.props.isLoading ?
                                                 <tr>
                                                     <td>Loading...</td>
                                                 </tr>
@@ -190,6 +193,7 @@ export default connect(
         })
     },
     dispatch => ({
-        fetchData: (url) => (dispatch(usersFetchData(url)))
+        fetchData: (url) => (dispatch(usersFetchData(url))),
+        searchName: (data) => (dispatch(searchData(data)))
     })
 )(Friends)

@@ -17,8 +17,14 @@ export function usersIsLoading(bool) {
 export function usersFetchDataSuccess(users) {
     return {
         type: C.USERS_FETCH_DATA_SUCCESS,
-        users: users
+        users
     };
+}
+export function searchData(result) {
+    return {
+        type: C.SEARCH_DATA,
+        result
+    }
 }
 
 export function usersFetchData(url) {
