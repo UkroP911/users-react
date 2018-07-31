@@ -65,7 +65,7 @@ class AddFriends extends Component{
                         <thead>
                         <tr>
                             {/*<th>№</th>*/}
-                            <th scope="col">Avatar</th>
+                            {/*<th scope="col">Avatar</th>*/}
                             <th scope="col">Name</th>
                             <th scope="col">Age</th>
                             <th scope="col">Phone</th>

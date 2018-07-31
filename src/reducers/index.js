@@ -41,9 +41,6 @@ const friendState = [
     }
 ];
 
-// console.log(initialState)
-
-
 export function search(state = initialState, action) {
     switch (action.type){
         case C.SEARCH_DATA:
@@ -51,7 +48,7 @@ export function search(state = initialState, action) {
                 ...state,
                 loading: false,
                 result: action.payload.result
-            }
+            };
         default: return state
     }
 }
@@ -66,7 +63,7 @@ export function friends(state = friendState, action) {
                     age: action.friendAge,
                     phone: action.friendPhone
                 }
-            ]
+            ];
         default: return state
     }
 }
@@ -75,7 +72,6 @@ export default combineReducers({
     search,
     friends
 });
-
 
 
 
