@@ -127,7 +127,7 @@ class Friends extends Component{
     render(){
         const splitData = this.splitUsers();
         const colPages = this.state.user ? Math.ceil(this.state.user.length / 8) : 0;
-
+        console.log(splitData)
         const { error, loading, user } = this.props;
         if (error) {
             return <div>Error! {error.message}</div>;
@@ -175,7 +175,6 @@ class Friends extends Component{
                                             splitData.map((person, index) => {
                                                 return <UserList
                                                     key={index}
-                                                    index={index}
                                                     {...person}
                                                     updateApp={this.updateApp}
                                                 />
