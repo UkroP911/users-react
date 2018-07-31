@@ -13,9 +13,9 @@ export default () =>
 
                 <div className="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
                     <ul className="navbar-nav">
-                        <li className="nav-item ">
-                            <NavLink to="/" exact={true} activeClassName="active" className="nav-link" href="">Home <span className="sr-only">(current)</span></NavLink>
-                        </li>
+                        {/*<li className="nav-item ">*/}
+                            {/*<NavLink to="/" exact={true} activeClassName="active" className="nav-link" href="">Home <span className="sr-only">(current)</span></NavLink>*/}
+                        {/*</li>*/}
                         <li className="nav-item">
                             <NavLink to="/friends" activeClassName="active" className="nav-link" href="">Friends</NavLink>
                         </li>
