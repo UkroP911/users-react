@@ -1,4 +1,12 @@
 export const USERS_HAS_ERRORED = 'USERS_HAS_ERRORED';
 export const USERS_IS_LOADING ='USERS_IS_LOADING';
 export const USERS_FETCH_DATA_SUCCESS ='USERS_FETCH_DATA_SUCCESS';
+export const ADD_FRIEND ='ADD_FRIEND';
+
+
+
+
+
+
+
 export const SEARCH_DATA ='SEARCH_DATA';

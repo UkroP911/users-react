@@ -5,6 +5,7 @@ import './App.css';
 import Header from './components/Header';
 import Home from './containers/Home'
 import Fiends from './containers/Friends';
+import AddFriends from './containers/AddFriends';
 
 class App extends Component {
 
@@ -15,6 +16,7 @@ class App extends Component {
                 <Header />
                 {/*<Route exact path="/" component={Home} />*/}
                 <Route exact path="/" component={Fiends}/>
+                <Route path="/addfriends" component={AddFriends}/>
             </div>
         </Router>
     );

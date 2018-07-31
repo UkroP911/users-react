@@ -17,11 +17,11 @@ export default () =>
                             {/*<NavLink to="/" exact={true} activeClassName="active" className="nav-link" href="">Home <span className="sr-only">(current)</span></NavLink>*/}
                         {/*</li>*/}
                         <li className="nav-item">
-                            <NavLink to="/friends" activeClassName="active" className="nav-link" href="">Friends</NavLink>
+                            <NavLink to="/" exact={true} activeClassName="active" className="nav-link" href="">Friends</NavLink>
                         </li>
-                        {/*<li className="nav-item">*/}
-                            {/*<NavLink to="/" activeClassName="active" className="nav-link" href="">Contacts</NavLink>*/}
-                        {/*</li>*/}
+                        <li className="nav-item">
+                            <NavLink to="/addfriends" activeClassName="active" className="nav-link" href="">Add friends</NavLink>
+                        </li>
                     </ul>
                 </div>
             </nav>

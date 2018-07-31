@@ -14,7 +14,32 @@ import {usersFetchDataSuccess, usersFetchData} from '../actions/getData'
 // };
 
 const initialState = data;
-
+const friendState = [
+    {
+        id: 0,
+        name:'FRIEND1',
+        age: 18,
+        phone: '0507445612',
+    },
+    {
+        id: 1,
+        name:'FRIEND2',
+        age: 28,
+        phone: '0507445612',
+    },
+    {
+        id: 2,
+        name:'FRIEND3',
+        age: 19,
+        phone: '0507445612',
+    },
+    {
+        id: 3,
+        name:'FRIEND4',
+        age: 20,
+        phone: '0507445612',
+    }
+];
 
 // console.log(initialState)
 
@@ -31,8 +56,24 @@ export function search(state = initialState, action) {
     }
 }
 
+export function friends(state = friendState, action) {
+    switch (action.type){
+        case C.ADD_FRIEND:
+            return [
+                ...state,
+                {
+                    name: action.friendName,
+                    age: action.friendAge,
+                    phone: action.friendPhone
+                }
+            ]
+        default: return state
+    }
+}
+
 export default combineReducers({
-    search
+    search,
+    friends
 });
 
 

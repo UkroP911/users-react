@@ -18,6 +18,12 @@ export function usersFetchDataSuccess(users) {
     };
 }
 
+export function addFriend(name) {
+    return {
+        type: C.ADD_FRIEND,
+        name
+    }
+}
 
 
 

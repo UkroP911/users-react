@@ -127,7 +127,6 @@ class Friends extends Component{
     render(){
         const splitData = this.splitUsers();
         const colPages = this.state.user ? Math.ceil(this.state.user.length / 8) : 0;
-        console.log(splitData)
         const { error, loading, user } = this.props;
         if (error) {
             return <div>Error! {error.message}</div>;
@@ -163,7 +162,7 @@ class Friends extends Component{
                                     <table className="table table-hover">
                                         <thead>
                                         <tr>
-                                            <th>№</th>
+                                            {/*<th>№</th>*/}
                                             <th scope="col">Avatar</th>
                                             <th scope="col">Name</th>
                                             <th scope="col">Age</th>
