@@ -30,19 +30,27 @@ class Home extends Component{
     };
 
     mutateUsers = () => {
-        const users = this.props.user && this.props.user.map((person, id) => ({
-            name: person.name.first.charAt(0).toUpperCase() + person.name.first.slice(1) + ' '
-            + person.name.last.charAt(0).toUpperCase() + person.name.last.slice(1),
+        const users = this.props.user && this.props.user.map((person, id) => {
+            const {name, dob, phone, picture, ...rest} = person;
+            return ({
+                name: name.first.charAt(0).toUpperCase() + name.first.slice(1) + ' '
+                + name.last.charAt(0).toUpperCase() + name.last.slice(1),
 
-            age: person.dob.age,
-            phone: person.phone,
-            avatar: person.picture.thumbnail,
-            avatarLarge: person.picture.large,
-            id: id,
-            restInfo: {...person}
-        }));
+                age: dob.age,
+                phone: phone,
+                avatar: picture.thumbnail,
+                avatarLarge: picture.large,
+                id: id,
+                ...rest
+            })
+        });
         return users
     };
+
+    toUpperCase(string){
+        return string.charAt(0).toUpperCase() + string.slice(1)
+    }
+
 
     render(){
         return(
@@ -51,7 +59,7 @@ class Home extends Component{
                     <div className="row">
                         <div className="col">
                             <aside className="sidebar">
-                                {console.log(this.state.activeUser)}
+                                {/*{console.log(this.props)}*/}
                                 {
                                     this.state.activeUser &&
                                     <UserInfo
@@ -66,6 +74,7 @@ class Home extends Component{
                             <main className="home__main">
                                 <UserFullInfo
                                     {...this.state.activeUser}
+                                    toUpperCase={this.toUpperCase}
                                 />
                             </main>
                         </div>
