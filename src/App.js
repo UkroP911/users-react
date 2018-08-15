@@ -13,6 +13,7 @@ import Login from './containers/Login';
 import ChangePassword from './containers/ChangePassword';
 import SignUp from './containers/SignUp';
 import MainPage from './containers/MainPage';
+import Footer from './containers/Footer';
 
 import * as routes from './constants/routes'
 
@@ -31,6 +32,8 @@ class App extends Component {
                     <Route exact path={routes.SIGN_UP} component={SignUp}/>
                     <Route exact path={routes.LANDING} component={MainPage}/>
                     {/*<Route exact path={routes.ADD_FRIENDS} component={AddFriends}/>*/}
+
+                    <Footer />
                 </div>
             </Router>
         );
