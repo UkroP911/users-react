@@ -109,7 +109,7 @@ class Login extends Component{
                                 <button disabled={isInvalid} type="submit" className="btn btn-primary d-block mx-auto">Submit</button>
                                 { error && <p>{error.message}</p> }
                             </form>
-                            <SignUpLink />
+                            {/*<SignUpLink />*/}
                         </div>
                     </div>
                 </div>
