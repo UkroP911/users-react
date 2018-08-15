@@ -15,7 +15,7 @@ export default ({sort, reset}) =>
             <button
                 type="button"
                 className="btn btn-default"
-                onClick={() => sort('age')}
+                onClick={() => sort('dob')}
             >
                 by age
             </button>

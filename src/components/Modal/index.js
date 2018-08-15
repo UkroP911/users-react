@@ -2,7 +2,7 @@ import React from 'react';
 
 
 
-export default ({onClose, onSubmit, onInputChange, stateValue}) =>
+export default () =>
     <div className="" tabIndex="-1" role="dialog">
         <div className="modal-dialog" role="document">
             <div className="modal-content">
@@ -13,7 +13,7 @@ export default ({onClose, onSubmit, onInputChange, stateValue}) =>
                         className="close"
                         data-dismiss="modal"
                         aria-label="Close"
-                        onClick={onClose}
+                        // onClick={onClose}
                     >
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -27,7 +27,7 @@ export default ({onClose, onSubmit, onInputChange, stateValue}) =>
                             <label htmlFor="exampleInputEmail1">Name</label>
                             <input type="text" className="form-control" id="exampleInputEmail1"
                                    aria-describedby="emailHelp" placeholder="Name"
-                                   onChange={onInputChange}
+                                   // onChange={onInputChange}
                                    // value={stateValue}
                                    ref={input => this.nameInput = input}
                             >
@@ -37,7 +37,7 @@ export default ({onClose, onSubmit, onInputChange, stateValue}) =>
                             <label htmlFor="exampleInputEmail1">Age</label>
                             <input type="number" min="1" max="3" className="form-control" id="exampleInputEmail1"
                                    aria-describedby="emailHelp" placeholder="Age"
-                                   onChange={onInputChange}
+                                   // onChange={onInputChange}
                                    // value={stateValue}
                                    ref={input => this.ageInput = input}>
                             </input>
@@ -46,7 +46,7 @@ export default ({onClose, onSubmit, onInputChange, stateValue}) =>
                             <label htmlFor="exampleInputEmail1">Phone</label>
                             <input type="number"  className="form-control" id="exampleInputEmail1"
                                    aria-describedby="emailHelp" placeholder="Phone"
-                                   onChange={onInputChange}
+                                   // onChange={onInputChange}
                                    // value={stateValue}
                                    ref={input => this.phoneInput = input}>
                             </input>
@@ -56,7 +56,7 @@ export default ({onClose, onSubmit, onInputChange, stateValue}) =>
                                 type="button"
                                 className="btn btn-secondary"
                                 data-dismiss="modal"
-                                onClick={onClose}
+                                // onClick={onClose}
                             >Close</button>
                             <input type="submit" className="btn btn-primary" value="Save changes"></input>
                         </div>

@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
-import { usersFetchData, searchData } from '../../actions/getData';
+import {connect} from 'react-redux';
+import {compose} from 'recompose';
+
+import withAuthorization from '../../components/withAuthorization';
+import {db} from "../../firebase";
+import rootAction from '../../actions';
+
 
 import UserInfo from '../../components/UserInfo';
 import UserList from '../../components/UserList';
@@ -9,69 +14,49 @@ import Pagination from '../../components/Pagination';
 import Search from '../../components/Search';
 
 
+
 class Friends extends Component{
     constructor(props){
         super(props);
-        this.sortType = {
-            age: true,
-            name: true
-        };
         this.state = {
             activeUser: [],
             errorMassage:false,
             errorSearch:false,
             currentPage: 0,
-            user: [],
-            loaded: false,
-            loading: false,
-        }
+        };
+        this.sortType = {
+            dob: true,
+            name: true
+        };
+    }
+    componentDidMount() {
+        const {onSetUsers} = this.props;
+        db.onceGetUsers()
+            .then(snapshot =>
+                    onSetUsers(snapshot.val()));
     }
 
-    componentDidMount() {
-        // return this.props.fetchData('https://randomuser.me/api/?results=100');
-        const data = this.initialData = this.mutateUsers();
-        return data && this.setState({
-            user: this.mutateUsers(),
-            activeUser: data[0]
-        })
-    };
-    mutateUsers = () => {
-        const users = this.props.user && this.props.user.map((person, id) => ({
-            name: person.name.first.charAt(0).toUpperCase() + person.name.first.slice(1) + ' '
-            + person.name.last.charAt(0).toUpperCase() + person.name.last.slice(1),
-            age: person.dob.age,
-            phone: person.phone,
-            avatar: person.picture.thumbnail,
-            avatarLarge: person.picture.large,
-            id: id
-        }));
-        return users
+    toUppercase = (value) => {
+        return value.charAt(0).toUpperCase() + value.slice(1)
     };
 
     updateApp = (config) => {
         this.setState(config);
-        if(config.activeUser){
-            if(config.activeUser.index === this.state.activeUser.index){
-                this.setState({
-                    errorMassage: true
-                })
-            } else {
-                this.setState({
-                    errorMassage: true
-                })
-            }
-        }
+        this.props.onSortUsers(config);
+    };
+
+    onActiveUser = (user) => {
+        this.props.onActiveUser(user);
     };
 
     search = (e) => {
         const value = e.target.value.toLowerCase();
-
-        const filter = this.initialData.filter( user => user.name.toLowerCase().includes(value) );
+        const filter = this.props.initialData.filter( user => user.name.first.toLowerCase().includes(value) || user.name.last.toLowerCase().includes(value));
 
         this.updateApp({
-            user: filter,
             currentPage: 0
         });
+        this.props.onSearchUser(filter);
 
         if(filter.length > 0){
             this.setState({
@@ -85,37 +70,39 @@ class Friends extends Component{
     };
 
     sort = (type) => {
-        const user = this.state.user;
+        const { users } = this.props;
         const isSorted = this.sortType[type];
         let direction = isSorted ? 1 : -1;
 
-        const sorted = user.slice().sort((a,b) => {
-            return a[type] === b[type] ? 0 : a[type] > b[type] ? direction : direction * -1;
+        const sorted = users.slice().sort((a,b) => {
+            const nameA = a[type].first + ' ' + a[type].last;
+            const nameB = b[type].first + ' ' + b[type].last;
+
+            const ageA = a[type].age;
+            const ageB = b[type].age;
+
+            if(type === 'name'){
+                return a[type] === b[type] ? 0 : nameA > nameB ? direction : direction * -1;
+            } else {
+                return a[type] === b[type] ? 0 : ageA > ageB ? direction : direction * -1;
+            }
         });
 
-        this.updateApp({
-            user: sorted,
-        });
+        this.updateApp([...sorted]);
         this.sortType[type] = !isSorted;
     };
 
     reset = () => {
-        this.updateApp({
-            user: this.initialData,
-            activeUser: this.initialData[0]
-        })
-
+        this.updateApp(this.props.initialData)
     };
 
-    splitUsers = () => {
-        return this.state.user &&
-            this.state.user.slice(this.state.currentPage * 8, this.state.currentPage * 8 + 8);
+    splitUsers = (users) => {
+        return users.slice(this.state.currentPage * 8, this.state.currentPage * 8 + 8);
     };
 
     handlePagination = (number) => {
         const current = this.state.currentPage;
-
-        if(current + number >= 0 && current + number < Math.ceil(this.props.user.length / 8)){
+        if(current + number >= 0 && current + number < Math.ceil(this.props.users.length / 8)){
             this.setState(prev => {
                 return ({
                     currentPage: prev.currentPage + number
@@ -125,29 +112,28 @@ class Friends extends Component{
     };
 
     render(){
-        const splitData = this.splitUsers();
-        const colPages = this.state.user ? Math.ceil(this.state.user.length / 8) : 0;
-        const { error, loading, user } = this.props;
-        if (error) {
-            return <div>Error! {error.message}</div>;
-        }
-
-        if (loading) {
-            return <div>Loading...</div>;
-        }
+        const { users } = this.props;
+        const splitData = users[0] ? this.splitUsers(users) : '';
+        const colPages = users[0] ? Math.ceil(users.length / 8) : 0;
+        console.log(users)
         return(
             <div className="friends">
                 <div className="friends__content pt-3">
                     <div className="container">
                         <div className="row">
-                            <div className="col">
-                                <aside className="sidebar pt-5">
-                                    <UserInfo
-                                        activeUser={this.state.activeUser}
-                                    />
-                                </aside>
-                            </div>
-                            <div className="col-xl-9">
+                            {this.props.activeUser
+                                ?
+                                <div className="col">
+                                    <aside className="sidebar pt-5">
+                                        <UserInfo
+                                            activeUser={this.props.activeUser}
+                                        />
+                                    </aside>
+                                </div>
+                                :
+                                null
+                            }
+                            <div className={this.props.activeUser ? 'col-xl-9' : 'col-xl-12'}>
                                 <main className="friends__main">
                                     <div className="row">
                                         <Search
@@ -170,15 +156,27 @@ class Friends extends Component{
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {splitData ?
+                                        {splitData !== '' ?
                                             splitData.map((person, index) => {
+                                                const name = this.toUppercase(person.name.first) + ' ' + this.toUppercase(person.name.last);
+                                                const {phone} = person;
+                                                const {age} = person.dob;
+                                                const {picture} = person;
+                                                let users = {
+                                                    name,
+                                                    phone,
+                                                    age,
+                                                    picture
+                                                };
                                                 return <UserList
                                                     key={index}
-                                                    {...person}
-                                                    updateApp={this.updateApp}
+                                                    {...users}
+                                                    onActiveUser={this.onActiveUser}
                                                 />
                                             }) :
-                                            null
+                                            <tr>
+                                                <td>Loading...</td>
+                                            </tr>
                                         }
                                         </tbody>
                                     </table>
@@ -197,39 +195,26 @@ class Friends extends Component{
     }
 }
 
-export default connect(
-    state => {
-        return({
-            user: state.search.results,
-        })
-    },
-    dispatch => ({
-        fetchData: (url) => (dispatch(usersFetchData(url))),
-        // searchName: (data) => (dispatch(searchData(data)))
-    })
-)(Friends)
+const mapStateToProps = (state) => {
+    console.log(state);
+    return {
+        users: state.userState.users,
+        initialData: state.userState.initialData,
+        activeUser: state.userState.activeUser
+    }
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    onSetUsers: (users) => dispatch (rootAction.setUsers(users)),
+    onSortUsers: (users) => dispatch(rootAction.sortUser(users)),
+    onActiveUser: (user) => dispatch(rootAction.activeUser(user)),
+    onSearchUser: (users) => dispatch(rootAction.searchUser(users))
+});
+
+const authCondition = (authUser) => !!authUser;
 
 
-
-
-
-
-
-
-
-
-// export default connect(
-//     state => {
-//         // console.log(state.filter)
-//         return({
-//             user: state.users.initialData,
-//             filter: state.users.filter,
-//             loading: state.users.loading,
-//             error: state.users.error
-//         })
-//     },
-//     dispatch => ({
-//         fetchData: (url) => (dispatch(usersFetchData(url))),
-//         searchName: (data) => (dispatch(searchData(data)))
-//     })
-// )(Friends)
+export default compose(
+    withAuthorization(authCondition),
+    connect(mapStateToProps, mapDispatchToProps)
+)(Friends);

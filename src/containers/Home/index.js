@@ -1,56 +1,48 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { usersFetchData } from '../../actions/getData';
+import {compose} from 'recompose';
 
 
 import UserInfo from '../../components/UserInfo';
 import UserFullInfo from '../../components/UserFullInfo';
 
+import withAuthorization from '../../components/withAuthorization';
+import {db} from "../../firebase";
+import rootAction from "../../actions";
 
 class Home extends Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            activeUser: [],
-            errorMassage:false,
-            errorSearch:false,
-            currentPage: 0,
-            user: [],
-            loaded: false,
-            loading: false,
-        }
-    }
     componentDidMount() {
-        // return this.props.fetchData('https://randomuser.me/api/?results=100');
-        const data = this.initialData = this.mutateUsers();
-        return data && this.setState({
-            user: this.mutateUsers(),
-            activeUser: data[0]
-        })
-    };
-
-    mutateUsers = () => {
-        const users = this.props.user && this.props.user.map((person, id) => {
-            const {name, dob, phone, picture, ...rest} = person;
-            return ({
-                name: name.first.charAt(0).toUpperCase() + name.first.slice(1) + ' '
-                + name.last.charAt(0).toUpperCase() + name.last.slice(1),
-
-                age: dob.age,
-                phone: phone,
-                avatar: picture.thumbnail,
-                avatarLarge: picture.large,
-                id: id,
-                ...rest
-            })
-        });
-        return users
-    };
-
-    toUpperCase(string){
-        return string.charAt(0).toUpperCase() + string.slice(1)
+        const {onSetUsers} = this.props;
+        db.onceGetUsers()
+            .then(snapshot =>
+                onSetUsers(snapshot.val()));
     }
 
+    toUppercase = (value) => {
+        return value.charAt(0).toUpperCase() + value.slice(1)
+    };
+
+    getCurrentUserInfo(){
+        const {authUser, users} = this.props;
+        return users[0] ? users.filter(user => user.email === authUser.email) : []
+
+    }
+
+    commonInfo = () => {
+        const [currentUser] = this.getCurrentUserInfo();
+        if(currentUser){
+            const name = this.toUppercase(currentUser.name.first) + ' ' + this.toUppercase(currentUser.name.last);
+            const {phone} = currentUser;
+            const {age} = currentUser.dob;
+            const {picture} = currentUser;
+            return {
+                name,
+                phone,
+                age,
+                picture
+            };
+        }
+    };
 
     render(){
         return(
@@ -59,23 +51,22 @@ class Home extends Component{
                     <div className="row">
                         <div className="col">
                             <aside className="sidebar">
-                                {/*{console.log(this.props)}*/}
-                                {
-                                    this.state.activeUser &&
                                     <UserInfo
-                                        {...this.state.activeUser}
+                                        {...this.commonInfo()}
+
                                     />
-                                }
-
                             </aside>
-
                         </div>
                         <div className="col-xl-9">
                             <main className="home__main">
-                                <UserFullInfo
-                                    {...this.state.activeUser}
-                                    toUpperCase={this.toUpperCase}
-                                />
+                                {
+                                    this.props.users[0] ?
+                                        <UserFullInfo
+                                            {...this.getCurrentUserInfo()[0]}
+                                            upperCase={this.toUppercase}
+                                        />
+                                        : <div>Loading...</div>
+                                }
                             </main>
                         </div>
                     </div>
@@ -85,14 +76,20 @@ class Home extends Component{
     }
 }
 
-export default connect(
-    state => {
-        // console.log(state.search.results)
-        return({
-            user: state.search.results,
-        })
-    },
-    dispatch => ({
-        fetchData: (url) => dispatch(usersFetchData(url))
-    })
-)(Home)
+
+
+const mapStateToProps = (state) => ({
+    authUser: state.sessionState.authUser,
+    users: state.userState.users,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onSetUsers: (users) => dispatch (rootAction.setUsers(users)),
+});
+
+const authCondition = (authUser) => !!authUser;
+
+export default compose(
+    withAuthorization(authCondition),
+    connect(mapStateToProps, mapDispatchToProps)
+)(Home);

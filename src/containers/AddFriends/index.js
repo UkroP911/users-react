@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import * as C from '../../constants';
+
 
 // import Modal from '../../components/Modal'
 import UserList from '../../components/UserList';
 
 class AddFriends extends Component{
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
 
         this.handleHide = this.handleHide.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -60,34 +59,40 @@ class AddFriends extends Component{
                 >
                     Add friends
                 </button>
+                <div className="container">
+                    <div className="row justify-content-center">
+                        <div className="col-xl-10">
+                            <table className="table table-hover">
+                                <thead>
+                                <tr>
+                                    {/*<th>№</th>*/}
+                                    {/*<th scope="col">Avatar</th>*/}
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Age</th>
+                                    <th scope="col">Phone</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    this.props.friends.map((person, index) => {
+                                        return(
+                                            <UserList
+                                                key={index}
+                                                {...person}
+                                                index={index}
+                                                readOnly={true}
+                                                // updateApp={this.updateApp}
+                                            />
 
-                    <table className="table table-hover">
-                        <thead>
-                        <tr>
-                            {/*<th>№</th>*/}
-                            {/*<th scope="col">Avatar</th>*/}
-                            <th scope="col">Name</th>
-                            <th scope="col">Age</th>
-                            <th scope="col">Phone</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                    {
-                        this.props.friends.map((person, index) => {
-                            return(
-                                <UserList
-                                    key={index}
-                                    {...person}
-                                    index={index}
-                                    readOnly={true}
-                                    // updateApp={this.updateApp}
-                                />
+                                        )
+                                    })
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-                            )
-                        })
-                    }
-                        </tbody>
-                    </table>
                 {
                     this.state.show &&
                     <div className="fixed-top" tabIndex="-1" role="dialog">
@@ -172,19 +177,21 @@ class AddFriends extends Component{
     }
 }
 
-export default connect(
-    state => ({
-        friends: state.friends,
-    }),
-    dispatch => ({
-        addFriend: (friendName, friendAge, friendPhone) =>
-            dispatch(
-                {
-                    type: C.ADD_FRIEND,
-                    friendName: friendName,
-                    friendAge: friendAge,
-                    friendPhone: friendPhone,
-                }
-            )
-    })
-)(AddFriends);
+export default AddFriends;
+
+// export default connect(
+//     state => ({
+//         friends: state.friends,
+//     }),
+//     dispatch => ({
+//         addFriend: (friendName, friendAge, friendPhone) =>
+//             dispatch(
+//                 {
+//                     type: C.ADD_FRIEND,
+//                     friendName: friendName,
+//                     friendAge: friendAge,
+//                     friendPhone: friendPhone,
+//                 }
+//             )
+//     })
+// )(AddFriends);
