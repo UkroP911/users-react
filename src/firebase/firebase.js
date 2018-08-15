@@ -3,21 +3,21 @@ import 'firebase/auth';
 import 'firebase/database';
 
 const prodConfig = {
-    apiKey: "AIzaSyDenD6_PTra4v_KSKyW0zjbzIs3LwrAXbc",
-    authDomain: "react-firebase-c4b3c.firebaseapp.com",
-    databaseURL: "https://react-firebase-c4b3c.firebaseio.com",
-    projectId: "react-firebase-c4b3c",
-    storageBucket: "react-firebase-c4b3c.appspot.com",
-    messagingSenderId: "549781663530"
+    apiKey: "apiKey",
+    authDomain: "authDomain",
+    databaseURL: "databaseURL",
+    projectId: "projectId",
+    storageBucket: "storageBucket",
+    messagingSenderId: "messagingSenderId"
 };
 
 const devConfig = {
-    apiKey: "AIzaSyDenD6_PTra4v_KSKyW0zjbzIs3LwrAXbc",
-    authDomain: "react-firebase-c4b3c.firebaseapp.com",
-    databaseURL: "https://react-firebase-c4b3c.firebaseio.com",
-    projectId: "react-firebase-c4b3c",
-    storageBucket: "react-firebase-c4b3c.appspot.com",
-    messagingSenderId: "549781663530"
+    apiKey: "apiKey",
+    authDomain: "authDomain",
+    databaseURL: "databaseURL",
+    projectId: "projectId",
+    storageBucket: "storageBucket",
+    messagingSenderId: "messagingSenderId"
 };
 
 const config = process.env.NODE_ENV === 'production'
