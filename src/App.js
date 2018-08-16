@@ -23,7 +23,7 @@ class App extends Component {
     render() {
         return (
             <Router >
-                <div className="App">
+                <div className="App" style={{paddingBottom: '80px'}}>
                     <Navigation />
                     <Route exact path={routes.FRIENDS} component={Fiends}/>
                     <Route exact path={routes.SIGN_IN} component={Login}/>

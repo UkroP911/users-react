@@ -7,7 +7,7 @@ import * as routes from '../../constants/routes'
 
 const SignInPage = ({ history }) =>
     <div>
-        <h1>SignIn</h1>
+        <h1 className="pt-5">SignIn</h1>
         <Login history={history} />
         {/*<PasswordForgetLink />*/}
         {/*<SignUpLink />*/}

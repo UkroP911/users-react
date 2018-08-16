@@ -5,7 +5,7 @@ class Footer extends Component{
         return(
             <footer className="footer">
                 <div className="container">
-                    <p>Created by Udovenko Denis | <a href="https://github.com/UkroP911">Github: UkroP911</a></p>
+                    <p className="mb-0">Created by Udovenko Denis | <a href="https://github.com/UkroP911">Github: UkroP911</a></p>
                 </div>
             </footer>
         )

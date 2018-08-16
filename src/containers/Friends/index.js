@@ -115,7 +115,6 @@ class Friends extends Component{
         const { users } = this.props;
         const splitData = users[0] ? this.splitUsers(users) : '';
         const colPages = users[0] ? Math.ceil(users.length / 8) : 0;
-        console.log(users)
         return(
             <div className="friends">
                 <div className="friends__content pt-3">
